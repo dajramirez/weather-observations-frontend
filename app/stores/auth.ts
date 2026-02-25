@@ -17,7 +17,7 @@ export const useAuthStore = defineStore('auth', {
         async login(email: string, password: string) {
             const config = useRuntimeConfig()
 
-            const data: any = await $fetch('/api/login', {
+            const data: any = await $fetch('/login', {
                 baseURL: config.public.apiBase as string,
                 method: 'POST',
                 body: { email, password },
