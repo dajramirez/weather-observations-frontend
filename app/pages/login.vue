@@ -37,6 +37,14 @@ const form = reactive({ email: '', password: '' });
 const error = ref('');
 const loading = ref(false);
 
+onMounted(() => {
+    auth.loadFromStorage()
+    if (auth.isAuthenticated) {
+        if (auth.isAdmin) router.push('/admin')
+        else if (auth.isObserver) router.push('/observer')
+    }
+})
+
 const handleLogin = async () => {
     error.value = '';
     loading.value = true;
