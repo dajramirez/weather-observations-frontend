@@ -25,6 +25,7 @@
                         <NuxtLink to="/admin" class="nav-link">Dashboard</NuxtLink>
                         <NuxtLink to="/admin/stations" class="nav-link">Estaciones</NuxtLink>
                         <NuxtLink to="/admin/users" class="nav-link">Usuarios</NuxtLink>
+                        <NuxtLink to="/admin/observations" class="nav-link">Observaciones</NuxtLink>
                         <NuxtLink to="/admin/alerts" class="nav-link">Alertas</NuxtLink>
                     </template>
                     <template v-else-if="auth.isObserver">
