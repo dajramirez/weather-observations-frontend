@@ -51,8 +51,8 @@ definePageMeta({
     meta: { role: 'observer' },
 })
 
+const { api } = useApi()
 const auth = useAuthStore()
-const config = useRuntimeConfig()
 const loading = ref(true)
 const stats = ref<any>(null)
 const recentObservations = ref<any[]>([])
@@ -65,10 +65,7 @@ onMounted(async () => {
     }
 
     try {
-        const data: any = await $fetch('/observer/dashboard', {
-            baseURL: config.public.apiBase as string,
-            headers: { Authorization: `Bearer ${auth.token}` },
-        })
+        const data: any = await api('/observer/dashboard')
         stats.value = data.stats
         recentObservations.value = data.recent_observations
     } catch (e) {

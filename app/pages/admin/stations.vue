@@ -185,8 +185,7 @@ definePageMeta({
     middleware: ['auth']
 })
 
-const auth = useAuthStore()
-const config = useRuntimeConfig()
+const { api } = useApi()
 
 const stations = ref<any>([])
 const observers = ref<any>([])
@@ -206,10 +205,6 @@ const assignUserId = ref<number | null>(null)
 
 const form = ref({ name: '', location: '', altitude: 0, description: '' })
 
-const headers = computed(() => ({
-    Authorization: `Bearer ${auth.token}`
-}))
-
 const availableObservers = computed(() => {
     if (!assigningStation.value) return observers.value
     const assignedIds = assigningStation.value.users?.map((u: any) => u.id) ?? []
@@ -219,10 +214,7 @@ const availableObservers = computed(() => {
 async function fetchStations() {
     loading.value = true
     try {
-        const data: any = await $fetch('/admin/stations', {
-            baseURL: config.public.apiBase as string,
-            headers: { Authorization: `Bearer ${auth.token}` },
-        })
+        const data: any = await api('/admin/stations')
         stations.value = data.stations ?? []
         observers.value = data.observers ?? []
     } catch {
@@ -287,15 +279,11 @@ async function submitForm() {
         if (editingStation.value) {
             await $fetch(`/admin/stations/${editingStation.value.id}`, {
                 method: 'PATCH',
-                baseURL: config.public.apiBase as string,
-                headers: headers.value,
                 body: form.value
             })
         } else {
             await $fetch('/admin/stations', {
                 method: 'POST',
-                baseURL: config.public.apiBase as string,
-                headers: headers.value,
                 body: form.value
             })
         }
@@ -315,8 +303,6 @@ async function submitAssign() {
     try {
         await $fetch(`/admin/stations/${assigningStation.value.id}/assign`, {
             method: 'POST',
-            baseURL: config.public.apiBase as string,
-            headers: headers.value,
             body: { user_id: assignUserId.value }
         })
         closeModals()
@@ -332,9 +318,7 @@ async function submitAssign() {
 async function unassignObserver(station: any, userId: number) {
     try {
         await $fetch(`/admin/stations/${station.id}/unassign`, {
-            method: 'DELETE',
-            baseURL: config.public.apiBase as string,
-            headers: headers.value,
+            method: 'POST',
             body: { user_id: userId }
         })
         await fetchStations()
@@ -348,9 +332,7 @@ async function submitDelete() {
     saving.value = true
     try {
         await $fetch(`/admin/stations/${deletingStation.value.id}`, {
-            method: 'DELETE',
-            baseURL: config.public.apiBase as string,
-            headers: headers.value,
+            method: 'DELETE'
         })
         closeModals()
         await fetchStations()

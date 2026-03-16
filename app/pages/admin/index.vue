@@ -32,8 +32,9 @@ definePageMeta({
     meta: { role: 'admin' },
 })
 
+const { api } = useApi()
+
 const auth = useAuthStore()
-const config = useRuntimeConfig()
 const loading = ref(true)
 const stats = ref<any>(null)
 
@@ -45,10 +46,7 @@ onMounted(async () => {
     }
 
     try {
-        const data: any = await $fetch('/admin/dashboard', {
-            baseURL: config.public.apiBase as string,
-            headers: { Authorization: `Bearer ${auth.token}` },
-        })
+        const data: any = await api('/admin/dashboard')
         stats.value = data.summary
     } catch (e) {
         console.error(e)

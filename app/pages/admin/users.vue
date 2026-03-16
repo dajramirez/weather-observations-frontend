@@ -128,8 +128,8 @@ import { f } from 'vue-router/dist/router-CWoNjPRp.mjs'
 
 definePageMeta({ layout: 'default', middleware: ['auth'] })
 
+const { api } = useApi()
 const auth = useAuthStore()
-const config = useRuntimeConfig()
 
 const users = ref<any[]>([])
 const roles = ref<any[]>([])
@@ -144,10 +144,6 @@ const editingUser = ref<any>(null)
 const deletingUser = ref<any>(null)
 const selectedRoleId = ref<number | null>(null)
 
-const headers = computed(() => ({
-    'Authorization': `Bearer ${auth.token}`
-}))
-
 const roleClass = (role: string) => {
     const map: Record<string, string> = {
         'admin': 'bg-purple-100 text-purple-700',
@@ -160,10 +156,7 @@ const roleClass = (role: string) => {
 async function fetchUsers() {
     loading.value = true
     try {
-        const data: any = await $fetch('/admin/users', {
-            baseURL: config.public.apiBase as string,
-            headers: headers.value,
-        })
+        const data: any = await api('/admin/users')
         users.value = Array.isArray(data) ? data : (data.data ?? [])
         roles.value = [
             { id: 1, name: 'admin' },
@@ -204,10 +197,8 @@ async function submitRoleChange() {
     saving.value = true
     try {
         await $fetch(`/admin/users/${editingUser.value.id}/role`, {
-            method: 'PATCH',
-            baseURL: config.public.apiBase as string,
-            headers: headers.value,
-            body: { role_id: selectedRoleId.value }
+            method: 'POST',
+            body: { role_id: selectedRoleId.value },
         })
         closeModals()
         await fetchUsers()
@@ -222,9 +213,7 @@ async function submitDelete() {
     saving.value = true
     try {
         await $fetch(`/admin/users/${deletingUser.value.id}`, {
-            method: 'DELETE',
-            baseURL: config.public.apiBase as string,
-            headers: headers.value,
+            method: 'DELETE'
         })
         closeModals()
         await fetchUsers()

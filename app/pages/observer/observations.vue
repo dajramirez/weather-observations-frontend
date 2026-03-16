@@ -149,8 +149,8 @@ definePageMeta({
     meta: { role: 'observer' },
 })
 
+const { api } = useApi()
 const auth = useAuthStore()
-const config = useRuntimeConfig()
 
 const loading = ref(true)
 const showForm = ref(false)
@@ -177,9 +177,7 @@ const fetchObservations = async (page = 1) => {
     auth.loadFromStorage()
     try {
         const data: any = await $fetch('/observer/observations', {
-            baseURL: config.public.apiBase as string,
-            headers: { Authorization: `Bearer ${auth.token}` },
-            params: { page },
+            params: { page }
         })
         observations.value = data.data
         pagination.value = {
@@ -196,9 +194,7 @@ const fetchObservations = async (page = 1) => {
 const fetchStations = async () => {
     auth.loadFromStorage()
     try {
-        const data: any = await $fetch(`${config.public.apiBase as string}/stations`, {
-            headers: { Authorization: `Bearer ${auth.token}` },
-        })
+        const data: any = await $fetch('/observer/stations')
         stations.value = data
     } catch (e) {
         console.error(e)
@@ -214,9 +210,7 @@ const submitObservation = async () => {
     try {
         await $fetch('/observer/observations', {
             method: 'POST',
-            baseURL: config.public.apiBase as string,
-            headers: { Authorization: `Bearer ${auth.token}` },
-            body: form,
+            body: form
         })
         formSuccess.value = 'Observación registrada correctamente.'
         showForm.value = false

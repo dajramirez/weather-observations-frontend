@@ -67,8 +67,8 @@ definePageMeta({
     meta: { role: 'observer' },
 })
 
+const { api } = useApi()
 const auth = useAuthStore()
-const config = useRuntimeConfig()
 
 const loading = ref(true)
 const alerts = ref<any[]>([])
@@ -87,8 +87,7 @@ const typeClass = (level: string) => {
 const fetchAlerts = async (page = 1) => {
     auth.loadFromStorage()
     try {
-        const data: any = await $fetch(`${config.public.apiBase as string}/alerts`, {
-            headers: { Authorization: `Bearer ${auth.token}` },
+        const data: any = await $fetch('/observer/alerts', {
             params: { page },
         })
         if (Array.isArray(data)) {
