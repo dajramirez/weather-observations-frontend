@@ -202,6 +202,7 @@
 definePageMeta({ layout: 'default', middleware: ['auth'] })
 
 const { api } = useApi()
+const { formatDate } = useFormatters()
 
 const observations = ref<any[]>([])
 const pagination = ref<any>(null)
@@ -309,12 +310,5 @@ function tempColor(temp: number | null | undefined) {
     if (temp >= 15) return 'text-green-500'
     if (temp >= 5) return 'text-blue-500'
     return 'text-indigo-600'
-}
-
-function formatDate(dateStr: string | null | undefined) {
-    if (!dateStr) return '-'
-    return new Date(dateStr).toLocaleString('es-ES', {
-        day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
-    })
 }
 </script>

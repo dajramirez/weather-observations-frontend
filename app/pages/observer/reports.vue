@@ -179,8 +179,8 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'default' })
 
-const auth = useAuthStore()
-const config = useRuntimeConfig()
+const { api } = useApi()
+const { formatDate } = useFormatters()
 
 const observer = ref<{ id: number, name: string } | null>(null)
 const stations = ref<{ id: number, name: string }[]>([])
@@ -200,10 +200,7 @@ const form = ref({
 onMounted(async () => {
     loadingStations.value = true
     try {
-        const data: any = await $fetch('/stations', {
-            baseURL: config.public.apiBase as string,
-            headers: { Authorization: `Bearer ${auth.token}` },
-        })
+        const data: any = await api('/observer/stations')
         stations.value = Array.isArray(data) ? data : (data.data ?? [])
     } catch {
         error.value = 'No se pudieron cargar las estaciones.'
@@ -227,10 +224,7 @@ async function fetchReport() {
             end_date: form.value.end_date,
         })
 
-        const data: any = await $fetch(`/observer/reports?${params}`, {
-            baseURL: config.public.apiBase as string,
-            headers: { Authorization: `Bearer ${auth.token}` },
-        })
+        const data: any = await api(`/observer/reports?${params.toString()}`)
 
         observer.value = data.observer ?? null
         observations.value = data.data ?? []
@@ -268,14 +262,6 @@ function tempColor(temp: number | null | undefined) {
     if (temp >= 15) return 'text-green-500'
     if (temp >= 5) return 'text-blue-500'
     return 'text-indigo-600'
-}
-
-// Formatear fecha
-function formatDate(dateStr: string | null | undefined) {
-    if (!dateStr) return '-'
-    return new Date(dateStr).toLocaleString('es-ES', {
-        day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
-    })
 }
 
 // Descargar CSV

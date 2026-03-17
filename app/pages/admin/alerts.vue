@@ -174,6 +174,7 @@
 definePageMeta({ layout: 'default', middleware: ['auth'] })
 
 const { api } = useApi()
+const { formatDate } = useFormatters()
 
 const alerts = ref<any[]>([])
 const stations = ref<any[]>([])
@@ -203,13 +204,6 @@ const levelClass = (level: string) => {
         red: 'bg-red-100 text-red-700',
     }
     return map[level] ?? 'bg-gray-100 text-gray-700'
-}
-
-function formatDate(dateStr: string) {
-    if (!dateStr) return '-'
-    return new Date(dateStr).toLocaleString('es-ES', {
-        day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
-    })
 }
 
 async function fetchAlerts() {
