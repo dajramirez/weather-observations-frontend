@@ -141,8 +141,6 @@
 </template>
 
 <script setup lang="ts">
-import { f } from 'vue-router/dist/router-CWoNjPRp.mjs'
-
 definePageMeta({
     layout: 'default',
     middleware: ['auth'],
