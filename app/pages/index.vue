@@ -70,7 +70,7 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Estaciones-->
+            <!-- Estaciones -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
                 <div class="px-6 py-4 border-b border-gray-100">
                     <h2 class="text-base font-semibold text-gray-900">Estaciones meteorológicas</h2>
@@ -78,18 +78,56 @@
                 </div>
                 <div v-if="loading" class="p-6 text-sm text-gray-400">Cargando estaciones...</div>
                 <div v-else class="divide-y divide-gray-50">
-                    <div v-for="station in stations" :key="station.id"
-                        class="px-6 py-4 hover:bg-gray-50 transition-colors">
-                        <div>
-                            <p class="text-sm font-medium text-gray-900">{{ station.name }}</p>
-                            <p class="text-xs text-gray-400 mt-0.5">{{ station.location }}</p>
+                    <div v-for="station in stations" :key="station.id">
+                        <!-- Fila principal -->
+                        <button @click="toggleStation(station.id)"
+                            class="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors text-left">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">{{ station.name }}</p>
+                                <p class="text-xs text-gray-400 mt-0.5">{{ station.location }}</p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                                    {{ station.altitude }} m
+                                </span>
+                                <svg :class="expandedStation === station.id ? 'rotate-180' : ''"
+                                    class="h-4 w-4 text-gray-400 transition-transform"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </button>
+
+                        <!-- Panel expandido -->
+                        <div v-if="expandedStation === station.id"
+                            class="px-6 pb-4 bg-blue-50 border-t border-blue-100">
+                            <p v-if="station.description" class="text-xs text-gray-600 mt-3 mb-3">{{ station.description
+                            }}</p>
+
+                            <div v-if="loadingObs" class="text-xs text-gray-400 py-2">Cargando observaciones...</div>
+                            <div v-else-if="latestObs.length > 0">
+                                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Últimas
+                                    observaciones</p>
+                                <div class="space-y-2">
+                                    <div v-for="obs in latestObs" :key="obs.id"
+                                        class="bg-white rounded-lg px-4 py-2 text-xs text-gray-600 flex flex-wrap gap-4">
+                                        <span class="text-gray-400">{{ formatDate(obs.observed_at) }}</span>
+                                        <span v-if="obs.temperature != null">🌡 {{ obs.temperature }}°C</span>
+                                        <span v-if="obs.humidity != null">💧 {{ obs.humidity }}%</span>
+                                        <span v-if="obs.pressure != null">🔵 {{ obs.pressure }} hPa</span>
+                                        <span v-if="obs.wind_speed != null">💨 {{ obs.wind_speed }} km/h</span>
+                                        <span v-if="obs.precipitation != null">🌧 {{ obs.precipitation }} mm</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p v-else class="text-xs text-gray-400 py-2">No hay observaciones registradas.</p>
                         </div>
-                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                            {{ station.altitude }} m
-                        </span>
                     </div>
-                    <p v-if="stations.length === 0" class="px-6 py-4 text-sm text-gray-400">No hay estaciones
-                        registradas</p>
+                    <p v-if="stations.length === 0" class="px-6 py-4 text-sm text-gray-400">
+                        No hay estaciones registradas.
+                    </p>
                 </div>
             </div>
 
@@ -130,10 +168,14 @@
 definePageMeta({ layout: false })
 
 const config = useRuntimeConfig()
+const { formatDate } = useFormatters()
 
 const stations = ref<any[]>([])
 const activeAlerts = ref<any[]>([])
 const loading = ref(true)
+const expandedStation = ref<number | null>(null)
+const latestObs = ref<any[]>([])
+const loadingObs = ref(false)
 
 const stationsWithAltitude = computed(() => {
     if (!stations.value.length) return 0
@@ -153,6 +195,26 @@ const levelClass = (level: string) => {
         red: 'bg-red-100 text-red-700',
     }
     return map[level] ?? 'bg-gray-100 text-gray-600'
+}
+
+async function toggleStation(id: number) {
+    if (expandedStation.value === id) {
+        expandedStation.value = null
+        latestObs.value = []
+        return
+    }
+    expandedStation.value = id
+    loadingObs.value = true
+    try {
+        const data: any = await $fetch(`/public/stations/${id}/observations`, {
+            baseURL: config.public.apiBase as string,
+        })
+        latestObs.value = data.data ?? []
+    } catch {
+        latestObs.value = []
+    } finally {
+        loadingObs.value = false
+    }
 }
 
 onMounted(async () => {

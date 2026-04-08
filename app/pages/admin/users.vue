@@ -42,6 +42,10 @@
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex gap-2">
+                                    <button @click="openDetail(user)"
+                                        class="text-xs px-3 py-1 border border-blue-200 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
+                                        Ver
+                                    </button>
                                     <button @click="openEditRole(user)"
                                         class="text-xs px-3 py-1 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                                         Cambiar rol
@@ -64,6 +68,57 @@
         <!-- Error global  -->
         <div v-if="error" class="mt-4 bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
             {{ error }}
+        </div>
+
+        <!-- Modal detalle usuario -->
+        <div v-if="showDetailModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                    <h2 class="text-base font-semibold text-gray-900">{{ detailUser?.name }}</h2>
+                    <button @click="closeModals" class="text-gray-400 hover:text-gray-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="px-6 py-4 space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-xs text-gray-400 uppercase tracking-wide">Email</p>
+                            <p class="text-sm text-gray-800 mt-0.5">{{ detailUser?.email }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 uppercase tracking-wide">Rol</p>
+                            <span :class="roleClass(detailUser?.role?.name)"
+                                class="px-2 py-0.5 rounded-full text-xs font-medium mt-0.5 inline-block">
+                                {{ detailUser?.role?.name ?? '—' }}
+                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 uppercase tracking-wide mb-2">Estaciones asignadas</p>
+                        <div v-if="detailUser?.stations?.length" class="flex flex-wrap gap-2">
+                            <span v-for="s in detailUser.stations" :key="s.id"
+                                class="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full">
+                                {{ s.name }}
+                            </span>
+                        </div>
+                        <p v-else class="text-sm text-gray-400">Sin estaciones asignadas.</p>
+                    </div>
+                </div>
+                <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-2">
+                    <button @click="openEditRole(detailUser); showDetailModal = false"
+                        class="px-4 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        Cambiar rol
+                    </button>
+                    <button @click="closeModals"
+                        class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
         </div>
 
         <!-- ===== Modal cambiar rol ====== -->
@@ -136,8 +191,10 @@ const saving = ref(false)
 const error = ref<string | null>(null)
 const formError = ref<string | null>(null)
 
+const showDetailModal = ref(false)
 const showRoleModal = ref(false)
 const showDeleteModal = ref(false)
+const detailUser = ref<any>(null)
 const editingUser = ref<any>(null)
 const deletingUser = ref<any>(null)
 const selectedRoleId = ref<number | null>(null)
@@ -170,6 +227,11 @@ async function fetchUsers() {
 
 onMounted(fetchUsers)
 
+function openDetail(user: any) {
+    detailUser.value = user
+    showDetailModal.value = true
+}
+
 function openEditRole(user: any) {
     editingUser.value = user
     selectedRoleId.value = user.role?.id ?? null
@@ -185,16 +247,18 @@ function confirmDelete(user: any) {
 function closeModals() {
     showRoleModal.value = false
     showDeleteModal.value = false
+    showDetailModal.value = false
     editingUser.value = null
     deletingUser.value = null
     formError.value = null
+    detailUser.value = null
 }
 
 async function submitRoleChange() {
     formError.value = null
     saving.value = true
     try {
-        await $fetch(`/admin/users/${editingUser.value.id}/role`, {
+        await api(`/admin/users/${editingUser.value.id}/role`, {
             method: 'POST',
             body: { role_id: selectedRoleId.value },
         })
@@ -210,7 +274,7 @@ async function submitRoleChange() {
 async function submitDelete() {
     saving.value = true
     try {
-        await $fetch(`/admin/users/${deletingUser.value.id}`, {
+        await api(`/admin/users/${deletingUser.value.id}`, {
             method: 'DELETE'
         })
         closeModals()

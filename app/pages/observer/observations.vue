@@ -100,6 +100,7 @@
                             <th class="pb-2">Humedad</th>
                             <th class="pb-2">Presión</th>
                             <th class="pb-2">Viento</th>
+                            <th class="pb-2">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -111,6 +112,12 @@
                             <td class="py-2">{{ obs.humidity }}%</td>
                             <td class="py-2">{{ obs.pressure }}hPa</td>
                             <td class="py-2">{{ obs.wind_speed }}km/h</td>
+                            <td class="py-2">
+                                <button @click="openDetail(obs)"
+                                    class="text-xs px-3 py-1 border border-blue-200 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
+                                    Ver
+                                </button>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -138,6 +145,60 @@
             </div>
         </div>
     </div>
+
+    <div v-if="showDetailModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg">
+            <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                <div>
+                    <h2 class="text-base font-semibold text-gray-900">{{ detailObs?.station?.name }}</h2>
+                    <p class="text-xs text-gray-400 mt-0.5">{{ new Date(detailObs?.observed_at).toLocaleString('es-ES')
+                    }}</p>
+                </div>
+                <button @click="showDetailModal = false" class="text-gray-400 hover:text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="px-6 py-4 grid grid-cols-3 gap-4">
+                <div class="text-center bg-gray-50 rounded-lg p-3">
+                    <p class="text-xs text-gray-400 mb-1">Temperatura</p>
+                    <p class="text-xl font-bold text-gray-800">{{ detailObs?.temperature ?? '—' }}<span
+                            class="text-sm font-normal">°C</span></p>
+                </div>
+                <div class="text-center bg-gray-50 rounded-lg p-3">
+                    <p class="text-xs text-gray-400 mb-1">Humedad</p>
+                    <p class="text-xl font-bold text-gray-800">{{ detailObs?.humidity ?? '—' }}<span
+                            class="text-sm font-normal">%</span></p>
+                </div>
+                <div class="text-center bg-gray-50 rounded-lg p-3">
+                    <p class="text-xs text-gray-400 mb-1">Presión</p>
+                    <p class="text-xl font-bold text-gray-800">{{ detailObs?.pressure ?? '—' }}<span
+                            class="text-sm font-normal"> hPa</span></p>
+                </div>
+                <div class="text-center bg-gray-50 rounded-lg p-3">
+                    <p class="text-xs text-gray-400 mb-1">Viento</p>
+                    <p class="text-xl font-bold text-gray-800">{{ detailObs?.wind_speed ?? '—' }}<span
+                            class="text-sm font-normal"> km/h</span></p>
+                    <p v-if="detailObs?.wind_direction" class="text-xs text-gray-400">{{ detailObs.wind_direction }}°
+                    </p>
+                </div>
+                <div class="text-center bg-gray-50 rounded-lg p-3">
+                    <p class="text-xs text-gray-400 mb-1">Precipitación</p>
+                    <p class="text-xl font-bold text-gray-800">{{ detailObs?.precipitation ?? '—' }}<span
+                            class="text-sm font-normal"> mm</span></p>
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t border-gray-100 flex justify-end">
+                <button @click="showDetailModal = false"
+                    class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -150,6 +211,8 @@ definePageMeta({
 const { api } = useApi()
 const auth = useAuthStore()
 
+const showDetailModal = ref(false)
+const detailObs = ref<any>(null)
 const loading = ref(true)
 const showForm = ref(false)
 const submitting = ref(false)
@@ -174,10 +237,10 @@ const form = reactive({
 const fetchObservations = async (page = 1) => {
     auth.loadFromStorage()
     try {
-        const data: any = await $fetch('/observer/observations', {
+        const data: any = await api('/observer/observations', {
             params: { page }
         })
-        observations.value = data.data
+        observations.value = data.data ?? []
         pagination.value = {
             current_page: data.current_page,
             last_page: data.last_page,
@@ -192,11 +255,16 @@ const fetchObservations = async (page = 1) => {
 const fetchStations = async () => {
     auth.loadFromStorage()
     try {
-        const data: any = await $fetch('/observer/stations')
-        stations.value = data
+        const data: any = await api('/stations')
+        stations.value = Array.isArray(data) ? data : (data.data ?? [])
     } catch (e) {
         console.error(e)
     }
+}
+
+const openDetail = (obs: any) => {
+    detailObs.value = obs
+    showDetailModal.value = true
 }
 
 const submitObservation = async () => {
@@ -206,7 +274,7 @@ const submitObservation = async () => {
     errors.value = {}
 
     try {
-        await $fetch('/observer/observations', {
+        await api('/observer/observations', {
             method: 'POST',
             body: form
         })

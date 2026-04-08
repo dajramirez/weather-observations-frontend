@@ -58,6 +58,10 @@
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex gap-2">
+                                    <button @click="openDetail(station)"
+                                        class="text-xs px-3 py-1 border border-blue-200 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
+                                        Ver
+                                    </button>
                                     <button @click="openEdit(station)"
                                         class="text-xs px-3 py-1 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                                         Editar
@@ -74,6 +78,58 @@
                 <p v-if="stations.length === 0" class="text-gray-400 text-sm p-6 text-center">
                     No hay estaciones registradas.
                 </p>
+            </div>
+        </div>
+
+        <!-- ====== Modal detalle ====== -->
+        <div v-if="showDetailModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-lg">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                    <h2 class="text-base font-semibold text-gray-900">{{ detailStation?.name }}</h2>
+                    <button @click="closeModals" class="text-gray-400 hover:text-gray-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="px-6 py-4 space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-xs text-gray-400 uppercase tracking-wide">Ubicación</p>
+                            <p class="text-sm text-gray-800 mt-0.5">{{ detailStation?.location ?? '—' }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-400 uppercase tracking-wide">Altitud</p>
+                            <p class="text-sm text-gray-800 mt-0.5">{{ detailStation?.altitude }} m</p>
+                        </div>
+                    </div>
+                    <div v-if="detailStation?.description">
+                        <p class="text-xs text-gray-400 uppercase tracking-wide">Descripción</p>
+                        <p class="text-sm text-gray-800 mt-0.5">{{ detailStation.description }}</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-400 uppercase tracking-wide mb-2">Observadores asignados</p>
+                        <div v-if="detailStation?.users?.length" class="flex flex-wrap gap-2">
+                            <span v-for="user in detailStation.users" :key="user.id"
+                                class="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full">
+                                {{ user.name }}
+                            </span>
+                        </div>
+                        <p v-else class="text-sm text-gray-400">Sin observadores asignados.</p>
+                    </div>
+                </div>
+                <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-2">
+                    <button @click="openEdit(detailStation); showDetailModal = false"
+                        class="px-4 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        Editar
+                    </button>
+                    <button @click="closeModals"
+                        class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                        Cerrar
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -195,9 +251,11 @@ const error = ref<string | null>(null)
 const formError = ref<string | null>(null)
 
 // Modales
+const showDetailModal = ref(false)
 const showFormModal = ref(false)
 const showAssignModal = ref(false)
 const showDeleteModal = ref(false)
+const detailStation = ref<any>(null)
 const editingStation = ref<any>(null)
 const deletingStation = ref<any>(null)
 const assigningStation = ref<any>(null)
@@ -225,6 +283,12 @@ async function fetchStations() {
 }
 
 onMounted(fetchStations)
+
+// Abrir modal detalle
+function openDetail(station: any) {
+    detailStation.value = station
+    showDetailModal.value = true
+}
 
 // Abrir modal crear
 function openCreate() {
@@ -262,9 +326,11 @@ function confirmDelete(station: any) {
 }
 
 function closeModals() {
+    showDetailModal.value = false
     showFormModal.value = false
     showAssignModal.value = false
     showDeleteModal.value = false
+    detailStation.value = null
     editingStation.value = null
     deletingStation.value = null
     assigningStation.value = null
@@ -277,12 +343,12 @@ async function submitForm() {
     saving.value = true
     try {
         if (editingStation.value) {
-            await $fetch(`/admin/stations/${editingStation.value.id}`, {
+            await api(`/admin/stations/${editingStation.value.id}`, {
                 method: 'PATCH',
                 body: form.value
             })
         } else {
-            await $fetch('/admin/stations', {
+            await api('/admin/stations', {
                 method: 'POST',
                 body: form.value
             })
@@ -301,7 +367,7 @@ async function submitAssign() {
     formError.value = null
     saving.value = true
     try {
-        await $fetch(`/admin/stations/${assigningStation.value.id}/assign`, {
+        await api(`/admin/stations/${assigningStation.value.id}/assign`, {
             method: 'POST',
             body: { user_id: assignUserId.value }
         })
@@ -317,7 +383,7 @@ async function submitAssign() {
 // Desasignar observador
 async function unassignObserver(station: any, userId: number) {
     try {
-        await $fetch(`/admin/stations/${station.id}/unassign`, {
+        await api(`/admin/stations/${station.id}/unassign`, {
             method: 'POST',
             body: { user_id: userId }
         })
@@ -331,7 +397,7 @@ async function unassignObserver(station: any, userId: number) {
 async function submitDelete() {
     saving.value = true
     try {
-        await $fetch(`/admin/stations/${deletingStation.value.id}`, {
+        await api(`/admin/stations/${deletingStation.value.id}`, {
             method: 'DELETE'
         })
         closeModals()

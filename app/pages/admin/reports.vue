@@ -72,9 +72,6 @@
                 <div>
                     <h2 class="text-sm font-semibold text-gray-700">Resultados</h2>
                     <p class="text-xs text-gray-400 mt-0.5">{{ observations.length }} observaciones encontradas</p>
-                    <p v-if="observer" class="text-xs text-gray-500 mt-0.5">
-                        Observador: <span class="font-medium text-gray-700">{{ observer.name }}</span>
-                    </p>
                 </div>
                 <button @click="downloadPDF"
                     class="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors">
@@ -104,6 +101,9 @@
                             <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
                                 Fecha / Hora
                             </th>
+                            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                                Observador
+                            </th>
                             <th
                                 class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wide">
                                 Temp. (°C)
@@ -130,6 +130,9 @@
                         <tr v-for="obs in observations" :key="obs.id" class="hover:bg-gray-50 transition-colors">
                             <td class="px-4 py-3 text-gray-700 font-medium whitespace-nowrap">
                                 {{ formatDate(obs.observed_at) }}
+                            </td>
+                            <td class="px-4 py-3 text-gray-500 text-xs">
+                                {{ obs.user?.name ?? '—' }}
                             </td>
                             <td class="px-4 py-3 text-right">
                                 <span :class="tempColor(obs.temperature)" class="font-medium">
@@ -226,11 +229,10 @@
                                     class="text-xs px-3 py-1 border border-blue-200 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors">
                                     Ver
                                 </button>
-                                <button v-if="report.user_id === auth.user?.id" @click="togglePublic(report)"
+                                <button @click="togglePublic(report)"
                                     class="text-xs px-3 py-1 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                                     {{ report.is_public ? 'Hacer privado' : 'Hacer público' }}
                                 </button>
-                                <span v-else class="text-xs text-gray-400">-</span>
                             </td>
                         </tr>
                     </tbody>
@@ -321,7 +323,6 @@ const auth = useAuthStore()
 const { api } = useApi()
 const { formatDate } = useFormatters()
 
-const observer = ref<{ id: number, name: string } | null>(null)
 const stations = ref<{ id: number, name: string }[]>([])
 const observations = ref<any[]>([])
 const history = ref<any[]>([])
@@ -346,8 +347,8 @@ onMounted(async () => {
     auth.loadFromStorage()
     loadingStations.value = true
     try {
-        const data: any = await api('/stations')
-        stations.value = Array.isArray(data) ? data : (data.data ?? [])
+        const data: any = await api('/admin/stations')
+        stations.value = Array.isArray(data) ? data : (data.stations ?? [])
     } catch {
         error.value = 'No se pudieron cargar las estaciones.'
     } finally {
@@ -360,7 +361,6 @@ onMounted(async () => {
 //Generar reporte
 async function fetchReport() {
     error.value = null
-    observer.value = null
     observations.value = []
     loading.value = true
     searched.value = false
@@ -372,9 +372,8 @@ async function fetchReport() {
             end_date: form.value.end_date,
         })
 
-        const data: any = await api(`/observer/reports?${params.toString()}`)
+        const data: any = await api(`/admin/reports?${params.toString()}`)
 
-        observer.value = data.observer ?? null
         observations.value = data.data ?? []
     } catch (err: any) {
         const status = err?.response?.status
@@ -392,15 +391,13 @@ async function fetchReport() {
 async function closeReport() {
     observations.value = []
     searched.value = false
-    observer.value = null
     await fetchHistory()
 }
 
-// Cargar historial de reportes
 async function fetchHistory() {
     loadingHistory.value = true
     try {
-        const data: any = await api('/observer/reports/history')
+        const data: any = await api('/admin/reports/history')
         history.value = Array.isArray(data) ? data : (data.data ?? [])
     } catch {
         // Silencioso
@@ -411,7 +408,7 @@ async function fetchHistory() {
 
 async function togglePublic(report: any) {
     try {
-        await api(`/observer/reports/${report.id}/toggle-public`, { method: 'PATCH' })
+        await api(`/admin/reports/${report.id}/toggle-public`, { method: 'PATCH' })
         await fetchHistory()
     } catch {
         // Silencioso
@@ -448,6 +445,7 @@ function downloadPDF() {
     const rows = observations.value.map(o => `
         <tr>
             <td>${formatDate(o.observed_at)}</td>
+            <td>${o.user?.name ?? '—'}</td>
             <td>${o.temperature ?? '—'}°C</td>
             <td>${o.humidity ?? '—'}%</td>
             <td>${o.pressure ?? '—'} hPa</td>
@@ -478,7 +476,6 @@ function downloadPDF() {
         <body>
             <h1>Reporte meteorológico — ${stationName}</h1>
             <div class="meta">
-                Observador: <strong>${observer.value?.name}</strong> &nbsp;·&nbsp;
                 Período: ${form.value.start_date} → ${form.value.end_date} &nbsp;·&nbsp;
                 ${observations.value.length} observaciones
             </div>
@@ -486,6 +483,7 @@ function downloadPDF() {
                 <thead>
                     <tr>
                         <th>Fecha / Hora</th>
+                        <th>Observador</th>
                         <th>Temperatura</th>
                         <th>Humedad</th>
                         <th>Presión</th>
@@ -524,7 +522,7 @@ async function viewReport(report: any) {
             start_date: report.start_at,
             end_date: report.end_at,
         })
-        const data: any = await api(`/observer/reports?${params.toString()}`)
+        const data: any = await api(`/admin/reports?${params.toString()}`)
         reportObservations.value = data.data ?? []
     } catch {
         reportObservations.value = []

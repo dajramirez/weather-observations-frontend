@@ -26,6 +26,7 @@
                         <NuxtLink to="/admin/stations" class="nav-link">Estaciones</NuxtLink>
                         <NuxtLink to="/admin/users" class="nav-link">Usuarios</NuxtLink>
                         <NuxtLink to="/admin/observations" class="nav-link">Observaciones</NuxtLink>
+                        <NuxtLink to="/admin/reports" class="nav-link">Reportes</NuxtLink>
                         <NuxtLink to="/admin/alerts" class="nav-link">Alertas</NuxtLink>
                     </template>
                     <template v-else-if="auth.isObserver">
@@ -33,6 +34,11 @@
                         <NuxtLink to="/observer/observations" class="nav-link">Observaciones</NuxtLink>
                         <NuxtLink to="/observer/reports" class="nav-link">Reportes</NuxtLink>
                         <NuxtLink to="/observer/alerts" class="nav-link">Alertas</NuxtLink>
+                    </template>
+                    <template v-else-if="auth.isUser">
+                        <NuxtLink to="/user" class="nav-link">Dashboard</NuxtLink>
+                        <NuxtLink to="user/reports" class="nav-link">Reportes</NuxtLink>
+                        <NuxtLink to="/user/alerts" class="nav-link">Alertas</NuxtLink>
                     </template>
                 </nav>
             </aside>

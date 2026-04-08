@@ -11,6 +11,7 @@ export const useAuthStore = defineStore('auth', {
         isAuthenticated: (state) => !!state.token,
         isAdmin: (state) => state.user?.role?.name === 'admin',
         isObserver: (state) => state.user?.role?.name === 'observer',
+        isUser: (state) => state.user?.role?.name === 'user',
     },
 
     actions: {
@@ -40,7 +41,7 @@ export const useAuthStore = defineStore('auth', {
                 this.user = null
                 localStorage.removeItem('token')
                 localStorage.removeItem('user')
-                navigateTo('/login')
+                navigateTo('/')
             })
         },
 
