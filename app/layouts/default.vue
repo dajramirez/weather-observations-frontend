@@ -37,7 +37,7 @@
                     </template>
                     <template v-else-if="auth.isUser">
                         <NuxtLink to="/user" class="nav-link">Dashboard</NuxtLink>
-                        <NuxtLink to="user/reports" class="nav-link">Reportes</NuxtLink>
+                        <NuxtLink to="/user/reports" class="nav-link">Reportes</NuxtLink>
                         <NuxtLink to="/user/alerts" class="nav-link">Alertas</NuxtLink>
                     </template>
                 </nav>
