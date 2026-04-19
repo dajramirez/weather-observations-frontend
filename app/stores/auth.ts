@@ -45,6 +45,7 @@ export const useAuthStore = defineStore('auth', {
             })
         },
 
+        // Hydrates the store from local storage on page load or navigation
         loadFromStorage() {
             const token = localStorage.getItem('token')
             const user = localStorage.getItem('user')

@@ -10,7 +10,7 @@
         <div v-if="loading" class="text-gray-500 text-sm">Cargando observaciones...</div>
 
         <div v-else class="bg-white rounded-xl shadow-sm border border-gray-200">
-            <!-- Tabla -->
+            <!-- Table -->
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
@@ -93,7 +93,7 @@
                 </p>
             </div>
 
-            <!-- Paginación -->
+            <!-- Pagination -->
             <div v-if="pagination"
                 class="px-6 py-4 border-t border-gray-100 flex justify-between items-center text-sm text-gray-500">
                 <span>Página {{ pagination.current_page }} de {{ pagination.last_page }} - {{ pagination.total }}
@@ -113,12 +113,12 @@
             </div>
         </div>
 
-        <!-- Error global -->
+        <!-- Global error -->
         <div v-if="error" class="mt-4 bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
             {{ error }}
         </div>
 
-        <!-- Modal detalle observación -->
+        <!-- Observation detail modal -->
         <div v-if="showDetailModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-xl shadow-xl w-full max-w-lg">
                 <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
@@ -157,7 +157,7 @@
                         <p class="text-xl font-bold text-gray-800">{{ detailObs?.wind_speed ?? '—' }}<span
                                 class="text-sm font-normal"> km/h</span></p>
                         <p v-if="detailObs?.wind_direction" class="text-xs text-gray-400">{{ detailObs.wind_direction
-                        }}°</p>
+                            }}°</p>
                     </div>
                     <div class="text-center bg-gray-50 rounded-lg p-3">
                         <p class="text-xs text-gray-400 mb-1">Precipitación</p>
@@ -178,7 +178,7 @@
             </div>
         </div>
 
-        <!-- ==== Modal editar ====== -->
+        <!-- ==== Edit modal ====== -->
         <div v-if="showEditModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-xl shadow-xl w-full max-w-sm">
                 <div class="px-6 py-4 border-b border-gray-100">
@@ -233,7 +233,7 @@
             </div>
         </div>
 
-        <!-- ==== Modal confirmar eliminación ====== -->
+        <!-- ==== Confirm delete modal ====== -->
         <div v-if="showDeleteModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-xl shadow-xl w-full max-w-sm">
                 <div class="px-6 py-4 border-b border-gray-100">

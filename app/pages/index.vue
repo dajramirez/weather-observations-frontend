@@ -48,7 +48,7 @@
 
         <div class="max-w-7xl mx-auto px-4 py-10 space-y-10">
 
-            <!-- Stats rápidas -->
+            <!-- Quick stats -->
             <div v-if="!loading" class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-center">
                     <p class="text-3xl font-bold text-blue-600">{{ stations.length }}</p>
@@ -70,7 +70,7 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Estaciones -->
+            <!-- Stations -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
                 <div class="px-6 py-4 border-b border-gray-100">
                     <h2 class="text-base font-semibold text-gray-900">Estaciones meteorológicas</h2>
@@ -100,7 +100,7 @@
                             </div>
                         </button>
 
-                        <!-- Panel expandido -->
+                        <!-- Expanded panel -->
                         <div v-if="expandedStation === station.id"
                             class="px-6 pb-4 bg-blue-50 border-t border-blue-100">
                             <p v-if="station.description" class="text-xs text-gray-600 mt-3 mb-3">{{ station.description
@@ -131,7 +131,7 @@
                 </div>
             </div>
 
-            <!-- Alertas activas -->
+            <!-- Active alerts -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
                 <div class="px-6 py-4 border-b border-gray-100">
                     <h2 class="text-base font-semibold text-gray-900">Alertas activas</h2>
@@ -225,7 +225,7 @@ onMounted(async () => {
         stations.value = data.stations ?? []
         activeAlerts.value = data.active_alerts ?? []
     } catch {
-        // Si falla la carga mostramos la página igualmente
+        // If loading fails, show the page anyway
     } finally {
         loading.value = false
     }

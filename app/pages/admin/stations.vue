@@ -19,7 +19,7 @@
         <!-- Loading -->
         <div v-if="loading" class="text-gray-500 text-sm">Cargando estaciones...</div>
 
-        <!-- Tabla -->
+        <!-- Table -->
         <div v-else class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
@@ -81,7 +81,7 @@
             </div>
         </div>
 
-        <!-- ====== Modal detalle ====== -->
+        <!-- ====== Detail Modal ====== -->
         <div v-if="showDetailModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-xl shadow-xl w-full max-w-lg">
                 <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
@@ -133,7 +133,7 @@
             </div>
         </div>
 
-        <!-- ====== Modal crear/editar ====== -->
+        <!-- ====== Create/Edit Modal ====== -->
         <div v-if="showFormModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
                 <div class="px-6 py-4 border-b border-gray-100">
@@ -177,7 +177,7 @@
             </div>
         </div>
 
-        <!--- ==== Modal asignar observador ==== -->
+        <!-- ==== Assign Observer Modal ==== -->
         <div v-if="showAssignModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-xl shadow-xl w-full max-w-sm">
                 <div class="px-6 py-4 border-b border-gray-100">
@@ -208,7 +208,7 @@
             </div>
         </div>
 
-        <!-- ====== Modal confirmar eliminación ====== -->
+        <!-- ====== Confirm Delete Modal ====== -->
         <div v-if="showDeleteModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-xl shadow-xl w-full max-w-sm">
                 <div class="px-6 py-4 border-b border-gray-100">

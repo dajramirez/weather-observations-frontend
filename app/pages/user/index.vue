@@ -27,7 +27,7 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Estaciones -->
+            <!-- Stations -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
                 <div class="px-6 py-4 border-b border-gray-100">
                     <h2 class="text-base font-semibold text-gray-900">Estaciones meteorológicas</h2>
@@ -57,7 +57,7 @@
                             </div>
                         </button>
 
-                        <!-- Panel expandido -->
+                        <!-- Expanded panel -->
                         <div v-if="expandedStation === station.id"
                             class="px-6 pb-4 bg-blue-50 border-t border-blue-100">
                             <div v-if="loadingObs" class="text-xs text-gray-400 py-3">Cargando observaciones...</div>
@@ -86,7 +86,7 @@
                 </div>
             </div>
 
-            <!-- Alertas activas -->
+            <!-- Active alerts -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200">
                 <div class="px-6 py-4 border-b border-gray-100">
                     <h2 class="text-base font-semibold text-gray-900">Alertas activas</h2>
@@ -173,7 +173,7 @@ onMounted(async () => {
         stations.value = data.stations ?? []
         activeAlerts.value = data.active_alerts ?? []
     } catch {
-        // silencioso
+        // If loading fails, show the page anyway
     } finally {
         loading.value = false
     }

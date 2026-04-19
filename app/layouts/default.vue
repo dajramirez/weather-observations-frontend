@@ -1,6 +1,6 @@
 <template>
     <div class="min-h-screen bg-gray-100">
-        <!-- Navbar -->
+        <!-- Navbar: top bar with user info and logout -->
         <nav class="bg-white shadow-sm">
             <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
                 <span class="font-bold text-lg text-blue-600">WeatherObs</span>
@@ -18,7 +18,7 @@
 
         <!-- Sidebar + Content -->
         <div class="max-w-7xl mx-auto px-4 py-6 flex gap-6">
-            <!-- Sidebar -->
+            <!-- Sidebar: role-based navigation menu -->
             <aside class="w-56 shrink-0">
                 <nav class="bg-white rounded-lg shadow-sm p-4 space-y-1">
                     <template v-if="auth.isAdmin">

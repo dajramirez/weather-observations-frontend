@@ -8,7 +8,7 @@
             </button>
         </div>
 
-        <!-- Formulario de nueva observación -->
+        <!-- New observation form -->
         <div v-if="showForm" class="bg-white rounded-lg shadow-sm p-6 mb-6">
             <h2 class="font-semibold text-gray-700 mb-4">Registrar observación</h2>
             <form @submit.prevent="submitObservation" class="grid grid-cols-2 gap-4">
@@ -86,7 +86,7 @@
             </form>
         </div>
 
-        <!-- Listado de observaciones -->
+        <!-- Observations list -->
         <div class="bg-white rounded-lg shadow-sm p-4">
             <div v-if="loading" class="text-gray-500 text-sm">Cargando observaciones...</div>
             <div v-else>
@@ -128,7 +128,7 @@
             </div>
         </div>
 
-        <!--- Paginación -->
+        <!-- Pagination -->
         <div v-if="pagination" class="flex justify-between items-center mt-4 text-sm text-gray-500">
             <span>Página {{ pagination.current_page }} de {{ pagination.last_page }}</span>
             <div class="flex gap-2">

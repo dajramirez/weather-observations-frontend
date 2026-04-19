@@ -6,11 +6,11 @@
             <p class="text-gray-500 mt-1">Consulta y exporta observaciones por estación y rango de fechas</p>
         </div>
 
-        <!-- Filtros -->
+        <!-- Filters -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
             <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">Filtros</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <!-- Estación -->
+                <!-- Station -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Estación</label>
                     <select v-model="form.station_id" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm
@@ -25,14 +25,14 @@
                     </select>
                 </div>
 
-                <!-- Fecha inicio -->
+                <!-- Start date -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Fecha inicio</label>
                     <input v-model="form.start_date" type="date" class="w-full border border-gray-300 rounded-lg px-3 py-2
                         text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
 
-                <!-- Fecha fin -->
+                <!-- End date -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Fecha fin</label>
                     <input v-model="form.end_date" type="date" class="w-full border border-gray-300 rounded-lg px-3 py-2
@@ -40,7 +40,7 @@
                 </div>
             </div>
 
-            <!-- Botón generar -->
+            <!-- Button to generate report -->
             <div class="mt-4 flex justify-end">
                 <button @click="fetchReport"
                     :disabled="loading || !form.station_id || !form.start_date || !form.end_date" class="inline-flex items-center gap-2 px-5 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg 
@@ -65,7 +65,7 @@
             <p class="text-sm text-red-700">{{ error }}</p>
         </div>
 
-        <!-- Resultados -->
+        <!-- Results -->
         <div v-if="observations.length > 0" class="bg-white rounded-xl shadow-sm border border-gray-200">
             <!-- Cabecera resultados -->
             <div class="py-6 px-4 border-b border-gray-100 flex items-center justify-between">
@@ -96,7 +96,7 @@
                 </button>
             </div>
 
-            <!-- Tabla -->
+            <!-- Table -->
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                     <thead>
@@ -156,7 +156,7 @@
                 </table>
             </div>
 
-            <!-- Footer estadísticas -->
+            <!-- Statistics footer -->
             <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="text-center">
                     <p class="text-xs text-gray-400">Temp. media</p>
@@ -171,7 +171,7 @@
             </div>
         </div>
 
-        <!-- Estado vacío (después de buscar) -->
+        <!-- No results -->
         <div v-else-if="searched && !loading"
             class="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-300 mx-auto mb-4" fill="none"
@@ -183,7 +183,7 @@
             <p class="text-gray-400 text-sm mt-1">Prueba con un rango de fechas diferente.</p>
         </div>
 
-        <!-- Historial de reportes -->
+        <!-- Reports history -->
         <div class="mt-8 bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                 <div>
@@ -241,7 +241,7 @@
             </div>
         </div>
 
-        <!-- Modal detalle reporte -->
+        <!-- Report detail modal -->
         <div v-if="showReportModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
                 <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white">
@@ -290,7 +290,7 @@
                             <tbody class="divide-y divide-gray-50">
                                 <tr v-for="obs in reportObservations" :key="obs.id" class="hover:bg-gray-50">
                                     <td class="px-4 py-3 text-gray-700 whitespace-nowrap">{{ formatDate(obs.observed_at)
-                                    }}</td>
+                                        }}</td>
                                     <td class="px-4 py-3 text-right"><span :class="tempColor(obs.temperature)"
                                             class="font-medium">{{ obs.temperature ?? '—' }}</span></td>
                                     <td class="px-4 py-3 text-right text-gray-600">{{ obs.humidity ?? '—' }}</td>
@@ -341,7 +341,7 @@ const form = ref({
     end_date: '',
 })
 
-// Cargar estaciones asignadas al observer
+// Load assigned stations to observer
 onMounted(async () => {
     auth.loadFromStorage()
     loadingStations.value = true
@@ -357,7 +357,7 @@ onMounted(async () => {
     await fetchHistory()
 })
 
-//Generar reporte
+// Generate report
 async function fetchReport() {
     error.value = null
     observer.value = null
@@ -396,7 +396,7 @@ async function closeReport() {
     await fetchHistory()
 }
 
-// Cargar historial de reportes
+// Load report history
 async function fetchHistory() {
     loadingHistory.value = true
     try {
@@ -418,7 +418,7 @@ async function togglePublic(report: any) {
     }
 }
 
-// Estadísiticas calculadas en el lado del cliente
+// Statistics computed on the client side
 const stats = computed(() => {
     if (!observations.value.length) return {}
     const temps = observations.value.map(o => parseFloat(o.temperature)).filter(n => !isNaN(n))
@@ -431,7 +431,7 @@ const stats = computed(() => {
     }
 })
 
-// Color temperatura
+// Temperature color
 function tempColor(temp: number | null | undefined) {
     if (temp === null || temp === undefined) return 'text-gray-400'
     if (temp >= 35) return 'text-red-600'
@@ -441,7 +441,7 @@ function tempColor(temp: number | null | undefined) {
     return 'text-indigo-600'
 }
 
-// Descargar PDF
+// Download PDF
 function downloadPDF() {
     const stationName = stations.value.find(s => s.id == form.value.station_id)?.name ?? 'Estación'
 

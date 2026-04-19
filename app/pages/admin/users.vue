@@ -9,7 +9,7 @@
         <!-- Loading -->
         <div v-if="loading" class="text-gray-500 text-sm">Cargando usuarios...</div>
 
-        <!-- Tabla -->
+        <!-- Table -->
         <div v-else class="bg-white rounded-xl shadow-sm border border-gray-200">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm">
@@ -65,12 +65,12 @@
             </div>
         </div>
 
-        <!-- Error global  -->
+        <!-- Global error  -->
         <div v-if="error" class="mt-4 bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
             {{ error }}
         </div>
 
-        <!-- Modal detalle usuario -->
+        <!-- User detail modal -->
         <div v-if="showDetailModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
                 <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
@@ -121,7 +121,7 @@
             </div>
         </div>
 
-        <!-- ===== Modal cambiar rol ====== -->
+        <!-- ===== Role change modal ====== -->
         <div v-if="showRoleModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-xl shadow-xl w-full max-w-sm">
                 <div class="px-6 py-4 border-b border-gray-100">
@@ -151,7 +151,7 @@
             </div>
         </div>
 
-        <!-- ===== Modal confirmar eliminación ====== -->
+        <!-- ===== Confirm delete modal ====== -->
         <div v-if="showDeleteModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-xl shadow-xl w-full max-w-sm">
                 <div class="px-6 py-4 border-b border-gray-100">

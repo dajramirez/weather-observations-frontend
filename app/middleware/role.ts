@@ -1,3 +1,4 @@
+// Redirects to /login if the authenticated user doesn't have the required role
 export default defineNuxtRouteMiddleware((to) => {
     if (import.meta.server) return
 
