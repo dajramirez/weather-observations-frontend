@@ -13,7 +13,7 @@
                     ¿Ayuda con esta sección?
                 </NuxtLink>
             </div>
-
+            <p class="text-gray-500 mt-1">Registra nuevas observaciones y consulta las ya ingresadas.</p>
             <button @click="showForm = !showForm"
                 class="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition text-sm">
                 {{ showForm ? 'Cancelar' : 'Nueva observación' }}
@@ -164,7 +164,7 @@
                 <div>
                     <h2 class="text-base font-semibold text-gray-900">{{ detailObs?.station?.name }}</h2>
                     <p class="text-xs text-gray-400 mt-0.5">{{ new Date(detailObs?.observed_at).toLocaleString('es-ES')
-                    }}</p>
+                        }}</p>
                 </div>
                 <button @click="showDetailModal = false" class="text-gray-400 hover:text-gray-600">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"

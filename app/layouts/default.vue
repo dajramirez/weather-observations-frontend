@@ -7,7 +7,7 @@
                 <div class="flex items-center gap-4">
                     <span class="text-sm text-gray-600">{{ auth.user?.name }}</span>
                     <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                        {{ auth.user?.role?.name }}
+                        {{ roleLabel }}
                     </span>
                     <button @click="auth.logout()" class="text-sm text-red-500 hover:text-red-700 transition">
                         Cerrar sesión
@@ -53,6 +53,15 @@
 
 <script setup lang="ts">
 const auth = useAuthStore();
+
+const roleLabel = computed(() => {
+    const map: Record<string, string> = {
+        admin: 'Administrador',
+        observer: 'Observador',
+        user: 'Usuario',
+    }
+    return map[auth.user?.role?.name] ?? auth.user?.role?.name
+})
 </script>
 
 <style scoped>

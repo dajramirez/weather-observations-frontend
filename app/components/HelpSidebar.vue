@@ -5,7 +5,7 @@
                 <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
                 <span class="text-xs font-bold text-blue-600 uppercase tracking-widest">Manual</span>
             </div>
-            <h2 class="text-xl font-extrabold text-gray-900 capitalize">{{ role }}</h2>
+            <h2 class="text-xl font-extrabold text-gray-900 capitalize">{{ roleLabel }}</h2>
         </div>
 
         <nav class="space-y-1">
@@ -48,4 +48,13 @@ const navigationMap: Record<string, { label: string, path: string, icon: string 
 }
 
 const menuItems = computed(() => navigationMap[props.role] || [])
+
+const roleLabel = computed(() => {
+    const map: Record<string, string> = {
+        admin: 'Administrador',
+        observer: 'Observador',
+        user: 'Usuario',
+    }
+    return map[props.role] ?? props.role
+})
 </script>
