@@ -3,6 +3,15 @@
         <!-- Header -->
         <div class="mb-6">
             <h1 class="text-xl font-bold text-gray-900">Generar Reporte</h1>
+            <NuxtLink to="/help/admin/reports" target="_blank"
+                class="text-xs text-gray-400 hover:text-blue-500 transition flex items-center gap-1 border-l pl-3 border-gray-200 h-5 mt-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                ¿Ayuda con esta sección?
+            </NuxtLink>
             <p class="text-gray-500 mt-1">Consulta y exporta observaciones por estación y rango de fechas</p>
         </div>
 

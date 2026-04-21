@@ -1,7 +1,15 @@
 <template>
     <div>
         <h1 class="text-2xl font-bold text-gray-800 mb-6">Alertas</h1>
-
+        <NuxtLink to="/help/observer/alerts" target="_blank"
+            class="text-xs text-gray-400 hover:text-blue-500 transition flex items-center gap-1 border-l pl-3 border-gray-200 h-5 mt-1">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            ¿Ayuda con esta sección?
+        </NuxtLink>
         <div class="bg-white rounded-lg shadow-sm p-4">
             <div v-if="loading" class="text-gray-500 text-sm">Cargando alertas...</div>
             <div v-else>
@@ -115,11 +123,11 @@
                         <span v-if="detailAlert.observation.temperature != null">🌡 {{
                             detailAlert.observation.temperature }}°C</span>
                         <span v-if="detailAlert.observation.humidity != null">💧 {{ detailAlert.observation.humidity
-                        }}%</span>
+                            }}%</span>
                         <span v-if="detailAlert.observation.pressure != null">🔵 {{ detailAlert.observation.pressure }}
                             hPa</span>
                         <span v-if="detailAlert.observation.wind_speed != null">💨 {{ detailAlert.observation.wind_speed
-                        }} km/h</span>
+                            }} km/h</span>
                         <span v-if="detailAlert.observation.precipitation != null">🌧 {{
                             detailAlert.observation.precipitation }} mm</span>
                     </div>
