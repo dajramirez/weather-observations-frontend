@@ -4,14 +4,10 @@
         <nav class="bg-white shadow-sm">
             <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
                 <span class="font-bold text-lg text-blue-600">WeatherObs</span>
-                <NuxtLink to="/login"
-                    class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                    </svg>
-                    Acceder
+
+                <NuxtLink to="/register"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-white text-blue-600 text-sm font-medium rounded-lg border border-blue-200 hover:bg-blue-50 transition-colors">
+                    Crear una cuenta
                 </NuxtLink>
             </div>
         </nav>
@@ -104,7 +100,7 @@
                         <div v-if="expandedStation === station.id"
                             class="px-6 pb-4 bg-blue-50 border-t border-blue-100">
                             <p v-if="station.description" class="text-xs text-gray-600 mt-3 mb-3">{{ station.description
-                            }}</p>
+                                }}</p>
 
                             <div v-if="loadingObs" class="text-xs text-gray-400 py-2">Cargando observaciones...</div>
                             <div v-else-if="latestObs.length > 0">

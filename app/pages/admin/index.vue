@@ -18,22 +18,26 @@
         <div v-if="loading" class="text-gray-500">Cargando...</div>
 
         <div v-else class="grid grid-cols-2 gap-4 md:grid-cols-4">
-            <div class="bg-white rounded-lg shadow-sm p-4 text-center">
+            <NuxtLink to="/admin/users"
+                class="bg-white rounded-lg shadow-sm p-4 text-center hover:shadow-md transition-shadow">
                 <p class="text-3xl font-bold text-blue-600">{{ stats?.total_users ?? '-' }}</p>
                 <p class="text-sm text-gray-500 mt-1">Usuarios</p>
-            </div>
-            <div class="bg-white rounded-lg shadow-sm p-4 text-center">
+            </NuxtLink>
+            <NuxtLink to="/admin/stations"
+                class="bg-white rounded-lg shadow-sm p-4 text-center hover:shadow-md transition-shadow">
                 <p class="text-3xl font-bold text-blue-600">{{ stats?.total_stations ?? '-' }}</p>
                 <p class="text-sm text-gray-500 mt-1">Estaciones</p>
-            </div>
-            <div class="bg-white rounded-lg shadow-sm p-4 text-center">
+            </NuxtLink>
+            <NuxtLink to="/admin/observations"
+                class="bg-white rounded-lg shadow-sm p-4 text-center hover:shadow-md transition-shadow">
                 <p class="text-3xl font-bold text-blue-600">{{ stats?.total_observations ?? '-' }}</p>
                 <p class="text-sm text-gray-500 mt-1">Observaciones</p>
-            </div>
-            <div class="bg-white rounded-lg shadow-sm p-4 text-center">
+            </NuxtLink>
+            <NuxtLink to="/admin/alerts"
+                class="bg-white rounded-lg shadow-sm p-4 text-center hover:shadow-md transition-shadow">
                 <p class="text-3xl font-bold text-blue-600">{{ stats?.active_alerts ?? '-' }}</p>
                 <p class="text-sm text-gray-500 mt-1">Alertas activas</p>
-            </div>
+            </NuxtLink>
         </div>
     </div>
 </template>

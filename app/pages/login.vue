@@ -5,6 +5,15 @@
                 Iniciar sesión
             </h1>
 
+            <NuxtLink to="/" class="flex items-center gap-1 text-sm text-gray-400 hover:text-blue-600 transition mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Volver al inicio
+            </NuxtLink>
+
             <form @submit.prevent="handleLogin" class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
@@ -41,6 +50,10 @@
                     class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition disabled:opacity-50">
                     {{ loading ? 'Accediendo...' : 'Entrar' }}
                 </button>
+                <p class="text-center text-sm text-gray-500 mt-2">
+                    ¿No tienes cuenta?
+                    <NuxtLink to="/register" class="text-blue-600 hover:underline">Regístrate</NuxtLink>
+                </p>
             </form>
         </div>
     </div>
