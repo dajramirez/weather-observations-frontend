@@ -57,7 +57,7 @@
             </div>
         </div>
 
-        <!-- Modal detalle reporte -->
+        <!-- Detail modal -->
         <div v-if="showModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
             <div class="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
                 <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white">
@@ -77,6 +77,7 @@
                     </button>
                 </div>
                 <div class="px-6 py-4">
+                    <FormError :error="formError" />
                     <div v-if="loadingDetail" class="text-sm text-gray-400 py-4 text-center">
                         Cargando observaciones...
                     </div>
@@ -107,7 +108,7 @@
                             <tbody class="divide-y divide-gray-50">
                                 <tr v-for="obs in reportObservations" :key="obs.id" class="hover:bg-gray-50">
                                     <td class="px-4 py-3 text-gray-700 whitespace-nowrap">{{ formatDate(obs.observed_at)
-                                    }}</td>
+                                        }}</td>
                                     <td class="px-4 py-3 text-right font-medium" :class="tempColor(obs.temperature)">{{
                                         obs.temperature ?? '—' }}</td>
                                     <td class="px-4 py-3 text-right text-gray-600">{{ obs.humidity ?? '—' }}</td>
@@ -145,6 +146,7 @@ const showModal = ref(false)
 const selectedReport = ref<any>(null)
 const reportObservations = ref<any[]>([])
 const loadingDetail = ref(false)
+const formError = ref<string | null>(null)
 
 function tempColor(temp: number | null | undefined) {
     if (temp === null || temp === undefined) return 'text-gray-400'
@@ -160,17 +162,14 @@ async function viewReport(report: any) {
     showModal.value = true
     loadingDetail.value = true
     reportObservations.value = []
+    formError.value = null
     try {
-        const params = new URLSearchParams({
-            station_id: String(report.station_id),
-            start_date: report.start_at,
-            end_date: report.end_at,
-        })
         const data: any = await $fetch(`/public/stations/${report.station_id}/observations`, {
             baseURL: config.public.apiBase as string,
         })
         reportObservations.value = data.data ?? []
     } catch {
+        formError.value = 'No se pudieron cargar las observaciones de este reporte.'
         reportObservations.value = []
     } finally {
         loadingDetail.value = false

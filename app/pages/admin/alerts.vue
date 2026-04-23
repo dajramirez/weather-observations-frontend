@@ -148,9 +148,9 @@
                             <span v-if="detailAlert.observation.temperature != null">🌡 {{
                                 detailAlert.observation.temperature }}°C</span>
                             <span v-if="detailAlert.observation.humidity != null">💧 {{ detailAlert.observation.humidity
-                            }}%</span>
+                                }}%</span>
                             <span v-if="detailAlert.observation.pressure != null">🔵 {{ detailAlert.observation.pressure
-                            }} hPa</span>
+                                }} hPa</span>
                             <span v-if="detailAlert.observation.wind_speed != null">💨 {{
                                 detailAlert.observation.wind_speed }} km/h</span>
                             <span v-if="detailAlert.observation.precipitation != null">🌧 {{
@@ -211,7 +211,7 @@
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" />
                         <label for="is_active" class="text-sm font-medium text-gray-700">Activa</label>
                     </div>
-                    <p v-if="formError" class="text-sm text-red-600 mt-2">{{ formError }}></p>
+                    <p v-if="formError" class="text-sm text-red-600 mt-2">{{ formError }}</p>
                 </div>
                 <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-2">
                     <button @click="closeModals"
