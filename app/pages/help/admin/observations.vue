@@ -1,6 +1,6 @@
 <template>
     <HelpPage title="Observaciones" role="Admin"
-        description="La sección de observaciones muestra todas las observaciones meteorológicas registradas en el sistema por cualquier observer. Puedes consultarlas, editarlas y eliminarlas."
+        description="La sección de observaciones muestra todas las observaciones meteorológicas registradas en el sistema por cualquier observer. Puedes crear nuevas observaciones en cualquier estación, consultarlas, editarlas y eliminarlas."
         :actions="actions" />
 </template>
 
@@ -12,6 +12,11 @@ const actions = [
         icon: '📋',
         title: 'Consultar observaciones',
         description: 'Visualiza el listado paginado de todas las observaciones con su fecha, estación, observer y valores meteorológicos. Usa los botones "Anterior" y "Siguiente" para navegar entre páginas.'
+    },
+    {
+        icon: '➕',
+        title: 'Crear nueva observación',
+        description: 'Haz clic en "Nueva observación" para registrar una observación en cualquier estación del sistema. Como administrador puedes registrar observaciones en todas las estaciones, sin necesidad de tenerlas asignadas.'
     },
     {
         icon: '🔍',

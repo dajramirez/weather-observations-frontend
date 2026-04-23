@@ -1,6 +1,7 @@
 <template>
     <div>
-        <div class="flex items-center gap-2">
+        <!-- Header -->
+        <div class="flex items-center gap-2 mb-1">
             <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
             <NuxtLink to="/help/observer/" target="_blank"
                 class="w-6 h-6 rounded-full bg-gray-100 hover:bg-blue-100 text-gray-400 hover:text-blue-600 flex items-center justify-center transition-colors flex-shrink-0"
@@ -12,50 +13,92 @@
                 </svg>
             </NuxtLink>
         </div>
-        <p class="text-gray-500 mt-1">Consulta el estado de las estaciones meteorológicas y alertas activas.</p>
-        <div v-if="loading" class="text-gray-500">Cargando...</div>
+        <p class="text-gray-500 mt-1 mb-6">Resumen de tu actividad y estaciones asignadas.</p>
+
+        <div v-if="loading" class="text-gray-500 text-sm">Cargando...</div>
 
         <div v-else class="space-y-6">
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-white rounded-lg shadow-sm p-4 text-center">
+
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-center">
                     <p class="text-3xl font-bold text-blue-600">{{ stats?.total_assigned ?? '-' }}</p>
                     <p class="text-sm text-gray-500 mt-1">Estaciones asignadas</p>
                 </div>
-                <div class="bg-white rounded-lg shadow-sm p-4 text-center">
-                    <p class="text-3xl font-bold text-blue-600">{{ stats?.year_average_temperature ?? '-' }}°C</p>
-                    <p class="text-sm text-gray-500 mt-1">Temperatura media anual</p>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-center">
+                    <p class="text-3xl font-bold text-green-600">{{ stats?.year_average_temperature ?? '-' }}°C</p>
+                    <p class="text-sm text-gray-500 mt-1">Temp. media anual</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 text-center">
+                    <p class="text-3xl font-bold text-purple-600">{{ recentObservations.length }}</p>
+                    <p class="text-sm text-gray-500 mt-1">Últimas observaciones</p>
                 </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-sm p-4">
-                <h2 class="font-semibold text-gray-700 mb-3">Últimas observaciones</h2>
-                <table class="w-full text-sm">
-                    <thead>
-                        <tr class="text-left text-gray-500 border-b">
-                            <th class="pb-2">Estación</th>
-                            <th class="pb-2">Temperatura</th>
-                            <th class="pb-2">Humedad</th>
-                            <th class="pb-2">Fecha y hora</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="obs in recentObservations" :key="obs.id" class="border-b last:border-0">
-                            <td class="py-2">{{ obs.station?.name }}</td>
-                            <td class="py-2">{{ obs.temperature }}°C</td>
-                            <td class="py-2">{{ obs.humidity }}%</td>
-                            <td class="py-2">{{ new Date(obs.observed_at).toLocaleString('es-ES') }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p v-if="recentObservations.length === 0" class="text-gray-400 text-sm mt-2">
-                    No hay observaciones recientes
-                </p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                <!-- Estaciones asignadas -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h2 class="text-base font-semibold text-gray-900">Estaciones asignadas</h2>
+                        <p class="text-xs text-gray-400 mt-0.5">Estaciones en las que puedes registrar observaciones</p>
+                    </div>
+                    <div class="divide-y divide-gray-50">
+                        <div v-for="station in stations" :key="station.id"
+                            class="px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                            <div>
+                                <p class="text-sm font-medium text-gray-900">{{ station.name }}</p>
+                                <p class="text-xs text-gray-400 mt-0.5">{{ station.location }}</p>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                                    {{ station.altitude }} m
+                                </span>
+                                <span class="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
+                                    {{ station.observations_count }} obs.
+                                </span>
+                            </div>
+                        </div>
+                        <p v-if="stations.length === 0" class="px-6 py-4 text-sm text-gray-400">
+                            No tienes estaciones asignadas.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Últimas observaciones -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h2 class="text-base font-semibold text-gray-900">Últimas observaciones</h2>
+                        <p class="text-xs text-gray-400 mt-0.5">Tus 10 registros más recientes</p>
+                    </div>
+                    <div class="divide-y divide-gray-50">
+                        <div v-for="obs in recentObservations" :key="obs.id"
+                            class="px-6 py-3 hover:bg-gray-50 transition-colors">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="text-sm font-medium text-gray-900">{{ obs.station?.name }}</span>
+                                <span class="text-xs text-gray-400">{{
+                                    new Date(obs.observed_at).toLocaleString('es-ES') }}</span>
+                            </div>
+                            <div class="flex flex-wrap gap-3 text-xs text-gray-500">
+                                <span v-if="obs.temperature != null">🌡 {{ obs.temperature }}°C</span>
+                                <span v-if="obs.humidity != null">💧 {{ obs.humidity }}%</span>
+                                <span v-if="obs.pressure != null">🔵 {{ obs.pressure }} hPa</span>
+                                <span v-if="obs.wind_speed != null">💨 {{ obs.wind_speed }} km/h</span>
+                                <span v-if="obs.precipitation != null">🌧 {{ obs.precipitation }} mm</span>
+                            </div>
+                        </div>
+                        <p v-if="recentObservations.length === 0" class="px-6 py-4 text-sm text-gray-400">
+                            No hay observaciones recientes.
+                        </p>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 </template>
 
-<script setup lang="tsx">
+<script setup lang="ts">
 definePageMeta({
     layout: 'default',
     middleware: ['auth'],
@@ -66,6 +109,7 @@ const { api } = useApi()
 const auth = useAuthStore()
 const loading = ref(true)
 const stats = ref<any>(null)
+const stations = ref<any[]>([])
 const recentObservations = ref<any[]>([])
 
 onMounted(async () => {
@@ -78,7 +122,8 @@ onMounted(async () => {
     try {
         const data: any = await api('/observer/dashboard')
         stats.value = data.stats
-        recentObservations.value = data.recent_observations
+        stations.value = data.stations ?? []
+        recentObservations.value = data.recent_observations ?? []
     } catch (e) {
         console.error(e)
     } finally {

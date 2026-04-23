@@ -60,18 +60,23 @@
                                 </span>
                             </td>
                             <td class="px-4 py-3">
-                                <div class="flex flex-wrap gap-1">
+                                <div v-if="user.role?.name === 'admin'"
+                                    class="px-2 py-0.5 bg-purple-50 text-purple-600 text-xs rounded-full inline-block">
+                                    Todas las estaciones
+                                </div>
+                                <div v-else-if="user.role?.name === 'observer'" class="flex flex-wrap gap-1">
                                     <span v-for="s in user.stations" :key="s.id"
                                         class="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 text-blue-700 text-xs rounded-full">
                                         {{ s.name }}
                                         <button @click="unassignStation(user, s.id)"
                                             class="hover:text-red-500 transition-colors">x</button>
                                     </span>
-                                    <button v-if="user.role?.name !== 'user'" @click="openAssignStation(user)"
+                                    <button @click="openAssignStation(user)"
                                         class="px-2 py-0.5 border border-dashed border-gray-300 text-gray-400 text-xs rounded-full hover:border-blue-400 hover:text-blue-500 transition-colors">
                                         + Asignar
                                     </button>
                                 </div>
+                                <span v-else class="text-gray-400 text-xs">-</span>
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex gap-2">
@@ -132,17 +137,23 @@
                     </div>
                     <div>
                         <p class="text-xs text-gray-400 uppercase tracking-wide mb-2">Estaciones asignadas</p>
-                        <div v-if="detailUser?.stations?.length" class="flex flex-wrap gap-2">
-                            <span v-for="s in detailUser.stations" :key="s.id"
-                                class="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full">
-                                {{ s.name }}
-                            </span>
+                        <div v-if="detailUser?.role?.name === 'admin'"
+                            class="px-2 py-1 bg-purple-50 text-purple-600 text-xs rounded-full inline-block">
+                            Todas las estaciones
                         </div>
-                        <p v-else class="text-sm text-gray-400">Sin estaciones asignadas.</p>
-                        <button @click="openAssignStation(detailUser)"
-                            class="text-xs px-3 py-1 border border-dashed border-gray-300 text-gray-400 rounded-lg hover:border-blue-400 hover:text-blue-500 transition-colors">
-                            + Asignar estación
-                        </button>
+                        <template v-else>
+                            <div v-if="detailUser?.stations?.length" class="flex flex-wrap gap-2">
+                                <span v-for="s in detailUser.stations" :key="s.id"
+                                    class="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full">
+                                    {{ s.name }}
+                                </span>
+                            </div>
+                            <p v-else class="text-sm text-gray-400">Sin estaciones asignadas.</p>
+                            <button @click="openAssignStation(detailUser)"
+                                class="mt-2 text-xs px-3 py-1 border border-dashed border-gray-300 text-gray-400 rounded-lg hover:border-blue-400 hover:text-blue-500 transition-colors">
+                                + Asignar estación
+                            </button>
+                        </template>
                     </div>
                 </div>
                 <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-2">
@@ -173,6 +184,16 @@
                             {{ role.name }}
                         </option>
                     </select>
+                    <div v-if="isDowngradeToUser"
+                        class="mt-3 flex items-start gap-2 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-red-500 flex-shrink-0 mt-0.5"
+                            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                        </svg>
+                        <p class="text-xs text-red-700">Al asignar el rol <strong>Usuario</strong> se eliminarán todas
+                            las estaciones asignadas a este usuario.</p>
+                    </div>
                     <p v-if="formError" class="text-sm text-red-600 mt-2">{{ formError }}</p>
                 </div>
                 <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-2">
@@ -340,6 +361,10 @@ const availableStations = computed(() => {
     return allStations.value.filter((s: any) => !assignedIds.includes(s.id))
 })
 
+const isDowngradeToUser = computed(() => {
+    return selectedRoleId.value === 3 && (editingUser.value?.stations?.length ?? 0) > 0
+})
+
 async function fetchUsers() {
     loading.value = true
     try {
@@ -411,13 +436,13 @@ async function submitRoleChange() {
     saving.value = true
     try {
         await api(`/admin/users/${editingUser.value.id}/role`, {
-            method: 'POST',
+            method: 'PATCH',
             body: { role_id: selectedRoleId.value },
         })
         closeModals()
         await fetchUsers()
     } catch (err: any) {
-        formError.value = err?.data?.message ?? 'Error al cambiar el rol.'
+        formError.value = 'Error al cambiar el rol. Inténtalo de nuevo.'
     } finally {
         saving.value = false
     }

@@ -178,7 +178,7 @@
                         <p class="text-xl font-bold text-gray-800">{{ detailObs?.wind_speed ?? '—' }}<span
                                 class="text-sm font-normal"> km/h</span></p>
                         <p v-if="detailObs?.wind_direction" class="text-xs text-gray-400">{{ detailObs.wind_direction
-                            }}°</p>
+                        }}°</p>
                     </div>
                     <div class="text-center bg-gray-50 rounded-lg p-3">
                         <p class="text-xs text-gray-400 mb-1">Precipitación</p>
@@ -352,6 +352,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: 'default', middleware: ['auth'] })
 
+const auth = useAuthStore()
 const { api } = useApi()
 const { formatDate } = useFormatters()
 
@@ -409,9 +410,14 @@ async function fetchObservations(page = 1) {
 }
 
 onMounted(async () => {
+    auth.loadFromStorage()
     await fetchObservations()
-    const data: any = await api('/stations')
-    stations.value = data.data ?? []
+    try {
+        const data: any = await api('/admin/stations')
+        stations.value = data.stations ?? []
+    } catch {
+        // silent
+    }
 })
 
 function openCreate() {

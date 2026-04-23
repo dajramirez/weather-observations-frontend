@@ -55,11 +55,15 @@
                             <td class="px-4 py-3 text-gray-600">{{ station.altitude }}</td>
                             <td class="px-4 py-3">
                                 <div class="flex flex-wrap gap-1">
-                                    <span v-for="user in station.users" :key="user.id"
+                                    <span v-for="user in station.users.filter((u: any) => u.role?.name !== 'admin')"
+                                        :key="user.id"
                                         class="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 text-blue-700 text-xs rounded-full">
                                         {{ user.name }}
                                         <button @click="unassignObserver(station, user.id)"
                                             class="hover:text-red-500 transition-colors">x</button>
+                                    </span>
+                                    <span class="px-2 py-0.5 bg-purple-50 text-purple-500 text-xs rounded-full">
+                                        + Administradores
                                     </span>
                                     <button @click="openAssign(station)"
                                         class="px-2 py-0.5 border border-dashed border-gray-300 text-gray-400 text-xs rounded-full hover:border-blue-400 hover:text-blue-500 transition-colors">
@@ -126,6 +130,9 @@
                             <span v-for="user in detailStation.users" :key="user.id"
                                 class="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full">
                                 {{ user.name }}
+                            </span>
+                            <span class="px-2 py-1 bg-purple-50 text-purple-500 text-xs rounded-full">
+                                + Administradores
                             </span>
                         </div>
                         <p v-else class="text-sm text-gray-400">Sin observadores asignados.</p>
@@ -395,7 +402,7 @@ async function submitAssign() {
 async function unassignObserver(station: any, userId: number) {
     try {
         await api(`/admin/stations/${station.id}/unassign`, {
-            method: 'POST',
+            method: 'DELETE',
             body: { user_id: userId }
         })
         await fetchStations()
