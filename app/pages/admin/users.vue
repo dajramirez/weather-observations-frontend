@@ -194,7 +194,9 @@
                         <p class="text-xs text-red-700">Al asignar el rol <strong>Usuario</strong> se eliminarán todas
                             las estaciones asignadas a este usuario.</p>
                     </div>
-                    <p v-if="formError" class="text-sm text-red-600 mt-2">{{ formError }}</p>
+                    <div v-if="formError" class="px-6 py-2 mb-2 bg-red-50 border-l-4 border-red-500">
+                        <p class="text-sm text-red-700">{{ formError }}</p>
+                    </div>
                 </div>
                 <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-2">
                     <button @click="closeModals"
@@ -265,7 +267,9 @@
                             </option>
                         </select>
                     </div>
-                    <p v-if="formError" class="text-sm text-red-600">{{ formError }}</p>
+                    <div v-if="formError" class="px-6 py-2 mb-2 bg-red-50 border-l-4 border-red-500">
+                        <p class="text-sm text-red-700">{{ formError }}</p>
+                    </div>
                 </div>
                 <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-2">
                     <button @click="closeModals"
@@ -294,7 +298,9 @@
                         <option value="">Selecciona una estación</option>
                         <option v-for="s in availableStations" :key="s.id" :value="s.id">{{ s.name }}</option>
                     </select>
-                    <p v-if="formError" class="text-sm text-red-600 mt-2">{{ formError }}</p>
+                    <div v-if="formError" class="px-6 py-2 mb-2 bg-red-50 border-l-4 border-red-500">
+                        <p class="text-sm text-red-700">{{ formError }}</p>
+                    </div>
                 </div>
                 <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-2">
                     <button @click="closeModals"

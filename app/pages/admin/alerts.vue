@@ -148,9 +148,9 @@
                             <span v-if="detailAlert.observation.temperature != null">🌡 {{
                                 detailAlert.observation.temperature }}°C</span>
                             <span v-if="detailAlert.observation.humidity != null">💧 {{ detailAlert.observation.humidity
-                                }}%</span>
+                            }}%</span>
                             <span v-if="detailAlert.observation.pressure != null">🔵 {{ detailAlert.observation.pressure
-                                }} hPa</span>
+                            }} hPa</span>
                             <span v-if="detailAlert.observation.wind_speed != null">💨 {{
                                 detailAlert.observation.wind_speed }} km/h</span>
                             <span v-if="detailAlert.observation.precipitation != null">🌧 {{
@@ -211,43 +211,45 @@
                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" />
                         <label for="is_active" class="text-sm font-medium text-gray-700">Activa</label>
                     </div>
-                    <p v-if="formError" class="text-sm text-red-600 mt-2">{{ formError }}</p>
-                </div>
-                <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-2">
-                    <button @click="closeModals"
-                        class="px-4 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                        Cancelar
-                    </button>
-                    <button @click="submitForm" :disabled="saving"
-                        class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors">
-                        {{ saving ? 'Guardando...' : 'Guardar' }}
-                    </button>
+                    <div v-if="formError" class="px-6 py-2 mb-2 bg-red-50 border-l-4 border-red-500">
+                        <p class="text-sm text-red-700">{{ formError }}</p>
+                    </div>
                 </div>
             </div>
+            <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-2">
+                <button @click="closeModals"
+                    class="px-4 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                    Cancelar
+                </button>
+                <button @click="submitForm" :disabled="saving"
+                    class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors">
+                    {{ saving ? 'Guardando...' : 'Guardar' }}
+                </button>
+            </div>
         </div>
+    </div>
 
-        <!-- ==== Confirm delete modal ====== -->
-        <div v-if="showDeleteModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-            <div class="bg-white rounded-xl shadow-xl w-full max-w-sm">
-                <div class="px-6 py-4 border-b border-gray-100">
-                    <h2 class="text-base font-semibold text-gray-900">Eliminar alerta</h2>
-                </div>
-                <div class="px-6 py-4">
-                    <p class="text-sm text-gray-600">
-                        ¿Seguro que quieres eliminar <span class="font-semibold">{{ deletingAlert?.title }}</span>?
-                        Esta acción no se puede deshacer.
-                    </p>
-                </div>
-                <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-2">
-                    <button @click="closeModals"
-                        class="px-4 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                        Cancelar
-                    </button>
-                    <button @click="submitDelete" :disabled="saving"
-                        class="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors">
-                        {{ saving ? 'Eliminando...' : 'Eliminar' }}
-                    </button>
-                </div>
+    <!-- ==== Confirm delete modal ====== -->
+    <div v-if="showDeleteModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-sm">
+            <div class="px-6 py-4 border-b border-gray-100">
+                <h2 class="text-base font-semibold text-gray-900">Eliminar alerta</h2>
+            </div>
+            <div class="px-6 py-4">
+                <p class="text-sm text-gray-600">
+                    ¿Seguro que quieres eliminar <span class="font-semibold">{{ deletingAlert?.title }}</span>?
+                    Esta acción no se puede deshacer.
+                </p>
+            </div>
+            <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-2">
+                <button @click="closeModals"
+                    class="px-4 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                    Cancelar
+                </button>
+                <button @click="submitDelete" :disabled="saving"
+                    class="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 transition-colors">
+                    {{ saving ? 'Eliminando...' : 'Eliminar' }}
+                </button>
             </div>
         </div>
     </div>

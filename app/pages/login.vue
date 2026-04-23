@@ -44,7 +44,9 @@
                     </div>
                 </div>
 
-                <p v-if="error" class="text-red-600 text-sm">{{ error }}</p>
+                <div v-if="error" class="px-6 py-2 mb-2 bg-red-50 border-l-4 border-red-500">
+                    <p class="text-sm text-red-700">{{ error }}</p>
+                </div>
 
                 <button type="submit" :disabled="loading"
                     class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition disabled:opacity-50">
