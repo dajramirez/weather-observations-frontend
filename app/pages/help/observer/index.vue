@@ -1,6 +1,6 @@
 <template>
     <HelpPage title="Dashboard" role="Observer"
-        description="El dashboard es la pantalla principal del panel del observer. Muestra un resumen de tu actividad, las estaciones que tienes asignadas y tus últimas observaciones registradas."
+        description="El dashboard es la pantalla principal del panel del observador. Muestra un resumen de tu actividad, las estaciones que tienes asignadas y tus últimas observaciones registradas."
         :actions="actions" />
 </template>
 

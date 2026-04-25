@@ -1,6 +1,6 @@
 <template>
     <HelpPage title="Reportes" role="User"
-        description="La sección de reportes te permite consultar los informes meteorológicos que han sido marcados como públicos por los administradores y observers del sistema."
+        description="La sección de reportes te permite consultar los informes meteorológicos que han sido marcados como públicos por los administradores y observadores del sistema."
         :actions="actions" />
 </template>
 

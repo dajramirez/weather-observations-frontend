@@ -21,7 +21,7 @@ const actions = [
     {
         icon: '🌡',
         title: 'Total de observaciones',
-        description: 'Número total de observaciones meteorológicas registradas por todos los observers.'
+        description: 'Número total de observaciones meteorológicas registradas por todos los observadores.'
     },
     {
         icon: '🚨',

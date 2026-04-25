@@ -27,7 +27,7 @@ const actions = [
     {
         icon: '📋',
         title: 'Historial de reportes',
-        description: 'La tabla inferior muestra tus reportes generados y los reportes públicos de otros observers, con su estación, período y estado de visibilidad.'
+        description: 'La tabla inferior muestra tus reportes generados y los reportes públicos de otros observadores, con su estación, período y estado de visibilidad.'
     },
     {
         icon: '🔍',
@@ -37,7 +37,7 @@ const actions = [
     {
         icon: '🌐',
         title: 'Cambiar visibilidad',
-        description: 'Haz clic en "Hacer público" o "Hacer privado" para controlar si tu reporte es visible para los usuarios con rol User. Solo puedes cambiar la visibilidad de tus propios reportes.'
+        description: 'Haz clic en "Hacer público" o "Hacer privado" para controlar si tu reporte es visible para los usuarios con rol Usuario. Solo puedes cambiar la visibilidad de tus propios reportes.'
     },
 ]
 </script>

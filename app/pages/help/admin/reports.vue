@@ -2,7 +2,7 @@
     <HelpPage title="Reportes" role="Admin"
         description="La sección de reportes permite generar informes meteorológicos de cualquier estación en un rango de fechas determinado. Los reportes generados quedan registrados en el historial y pueden hacerse públicos para que otros usuarios los consulten."
         :actions="actions"
-        notes="Los reportes muestran todas las observaciones de la estación en el rango indicado, independientemente del observer que las registró." />
+        notes="Los reportes muestran todas las observaciones de la estación en el rango indicado, independientemente del observador que las registró." />
 </template>
 
 <script setup lang="ts">
@@ -37,7 +37,7 @@ const actions = [
     {
         icon: '🌐',
         title: 'Cambiar visibilidad',
-        description: 'Haz clic en "Hacer público" o "Hacer privado" para controlar si el reporte es visible para los usuarios con rol User.'
+        description: 'Haz clic en "Hacer público" o "Hacer privado" para controlar si el reporte es visible para los usuarios con rol Usuario.'
     },
 ]
 </script>
