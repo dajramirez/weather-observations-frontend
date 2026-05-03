@@ -4,13 +4,13 @@
             <div>
                 <h1 class="text-2xl font-bold text-gray-800">Observaciones</h1>
                 <NuxtLink to="/help/observer/observations" target="_blank"
-                    class="text-xs text-gray-400 hover:text-blue-500 transition flex items-center gap-1 border-l pl-3 border-gray-200 h-5 mt-1">
+                    class="w-6 h-6 rounded-full bg-gray-100 hover:bg-blue-100 text-gray-400 hover:text-blue-600 flex items-center justify-center transition-colors flex-shrink-0"
+                    title="Ayuda con esta sección">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    ¿Ayuda con esta sección?
                 </NuxtLink>
             </div>
             <p class="text-gray-500 mt-1">Registra nuevas observaciones y consulta las ya ingresadas.</p>
@@ -90,7 +90,7 @@
                 <div>
                     <h2 class="text-base font-semibold text-gray-900">{{ detailObs?.station?.name }}</h2>
                     <p class="text-xs text-gray-400 mt-0.5">{{ new Date(detailObs?.observed_at).toLocaleString('es-ES')
-                        }}</p>
+                    }}</p>
                 </div>
                 <button @click="showDetailModal = false" class="text-gray-400 hover:text-gray-600">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"

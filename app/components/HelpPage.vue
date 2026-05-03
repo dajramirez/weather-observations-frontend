@@ -32,7 +32,7 @@
                 <div class="mb-8">
                     <div
                         class="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 text-xs font-medium rounded-full mb-3">
-                        <span>{{ role }}</span>
+                        <span>{{ translateRole(role) }}</span>
                     </div>
                     <h1 class="text-2xl font-bold text-gray-900 mb-2">{{ title }}</h1>
                     <p class="text-gray-500 leading-relaxed">{{ description }}</p>
@@ -88,6 +88,19 @@ defineProps<{
 const closeWindow = () => {
     if (typeof window !== 'undefined') {
         window.close()
+    }
+}
+
+const translateRole = (role: string) => {
+    switch (role.toLocaleLowerCase()) {
+        case 'admin':
+            return 'Administrador'
+        case 'observer':
+            return 'Observador'
+        case 'user':
+            return 'Usuario'
+        default:
+            return role
     }
 }
 </script>
