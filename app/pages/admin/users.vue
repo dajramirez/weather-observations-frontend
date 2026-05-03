@@ -85,7 +85,7 @@
                                         Ver
                                     </button>
                                     <button @click="openEditRole(user)" :disabled="user.id === auth.user?.id"
-                                        class="text-xs px-3 py-1 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                        class="text-xs px-3 py-1 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
                                         Cambiar rol
                                     </button>
                                     <button @click="confirmDelete(user)" :disabled="user.id === auth.user?.id"
