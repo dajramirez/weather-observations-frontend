@@ -157,8 +157,9 @@
                     </div>
                 </div>
                 <div class="px-6 py-4 border-t border-gray-100 flex justify-end gap-2">
-                    <button @click="openEditRole(detailUser); showDetailModal = false"
-                        class="px-4 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                    <button :disabled="detailUser?.id === auth.user?.id"
+                        @click="openEditRole(detailUser); showDetailModal = false"
+                        class="px-4 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
                         Cambiar rol
                     </button>
                     <button @click="closeModals"
